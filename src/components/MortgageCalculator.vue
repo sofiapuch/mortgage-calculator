@@ -14,8 +14,12 @@
             <RealEstateToggle v-model="realEstateCommission" />
         </div>
         <div>
-            <label for="">Total savings</label>
-            <input type="text" />
+            <label for="total-savings">Total savings</label>
+            <input 
+                id="total-savings" 
+                name="total-savings" 
+                type="number"
+                v-model.number="totalSavings" />
         </div>
         <div>
             <label for="">Annual repayment rate</label>
@@ -31,7 +35,7 @@
 
     <div>
         <p>Loan to value</p>
-        <!-- <p>{{ loanToValue }} %</p> -->
+        <p>{{ loanToValue }} %</p>
     </div>
 
 </template>
@@ -69,9 +73,7 @@ export default {
             cityTax: 0.06, // TODO: move to global
             purchasePrice: 0,
             totalSavings: 0,
-            realEstateCommission: false,
-            // impliedLoan: 0,
-            //loanToValue: 0
+            realEstateCommission: false
         }
     },
     computed: {
@@ -85,8 +87,13 @@ export default {
 
             const totalCosts = getTotalCosts(notaryCosts, brokerCosts, stampDutyCosts); 
 
-            //rawLoanAmount = totalCosts - total_savings + property_price
+            // rawLoanAmount = totalCosts - total_savings + property_price
             return totalCosts - this.totalSavings + this.purchasePrice;
+        },
+        loanToValue() {
+            // loanToValue = rawLoanAmount / property_price
+            const value = (this.rawLoanAmount / this.purchasePrice) * 100;
+            return value.toFixed(1);
         }
     },
     methods: {
