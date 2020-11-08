@@ -2,35 +2,39 @@
 
     <div class="grid-x grid-margin-x">
 
-        <base-card extraCss="cell medium-8 large-10">
+        <base-card extraCss="cell medium-12 large-9">
             
             <form class="mortgage-calculator cell" @submit.prevent="submitForm">
 
                 <h3 class="mortgage-calculator__title cell">Mortgage Calculator</h3>
 
                 <div class="grid-x grid-margin-x">
-                    <div class="cell medium-6">
+                    <div class="mortgage-calculator__section cell medium-6">
                         <label for="purchase-price">Property purchase price</label>
                         <input 
                             id="purchase-price" 
-                            name="purchase-price" 
+                            name="purchase-price"
                             type="number"
-                            v-model.number="purchasePrice" />
+                            v-model.number="purchasePrice" 
+                            @blur="validatePurchasePrice"/>
+                        <p class="error" v-if="purchasePriceValidity">Please enter a valid number</p>
                     </div>
-                    <div class="cell medium-6">
+                    <div class="mortgage-calculator__section cell medium-6">
                         <label for="total-savings">Total savings</label>
                         <input 
                             id="total-savings" 
                             name="total-savings" 
                             type="number"
-                            v-model.number="totalSavings" />
+                            v-model.number="totalSavings" 
+                            @blur="validateTotalSavings"/>
+                        <p class="error" v-if="totalSavingsValidity">Please enter a valid number</p>
                     </div>
-                    <div class="cell medium-6">
+                    <div class="mortgage-calculator__section cell medium-6">
                         <RealEstateToggle v-model="realEstateCommission" />
                     </div>
-                    <div class="cell medium-6">
+                    <div class="mortgage-calculator__section cell medium-6">
                         <label for="">Annual repayment rate</label>
-                        <input type="text" />
+                        <input type="text" value="2%" />
                     </div>
                     <div class="mortgage-calculator__button-wrapper cell">
                         <button class="mortgage-calculator__button">Calculate</button>
@@ -41,7 +45,7 @@
 
         </base-card>
 
-        <div class="cell medium-4 large-2">
+        <div class="cell medium-12 large-3">
             <MortgageOption
                 title="Implied Loan"
                 option-symbol="€"
@@ -100,14 +104,15 @@ export default {
             brokerTax: BROKER_TAX,
             cityTax: CITY_TAX,
             purchasePrice: 0,
+            purchasePriceValidity: null,
             totalSavings: 0,
+            totalSavingsValidity: null,
             realEstateCommission: false,
             tableData: {}
         }
     },
     computed: {
         rawLoanAmount() {
-
             // return a 0 on page load
             if (this.purchasePrice === 0 && this.totalSavings === 0) {
                 return 0;
@@ -131,6 +136,12 @@ export default {
         }
     },
     methods: {
+        validatePurchasePrice() {
+            this.purchasePriceValidity = this.purchasePrice <= 0;
+        },
+        validateTotalSavings() {
+            this.totalSavingsValidity = this.totalSavings <= 0;
+        },
         submitForm() {
  
             // IMPORTANT: Server CORS issue - Data saved from request
@@ -163,8 +174,6 @@ export default {
                 throw new Error(resolve.status);
             })
             .then((response) => {
-                console.log("response: ", response);
-
                 const data = response.data;
 
                 if (data && data.root && data.root.ratesTable) {
@@ -177,19 +186,45 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+$input-value-color: #01a1b1;
+$input-border-color: #dfe8f1;
 $button-primary-color: #2c7083;
 $button-hover-color: #dba879;
+$error-color: #c41c1c;
 
 .mortgage-calculator {
 
     &__title {
         font-size: 20px;
         font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    &__section {
+        margin-bottom: 30px;
+        position: relative;
+
+        .error {
+            bottom: -20px;
+            color: $error-color;
+            font-size: 12px;
+            font-weight: 700;
+            position: absolute;
+        }
+
+        input {
+            color: $input-value-color;
+            border-color: $input-border-color;
+            border-radius: 3px;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 20px 20px;
+            text-align: center;
+        }
     }
 
     &__button-wrapper {
         text-align: center;
-        margin: 20px 0 0;
     }
 
     &__button {

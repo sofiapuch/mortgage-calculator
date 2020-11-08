@@ -16,6 +16,10 @@ $teal: #2c7083;
     margin-bottom: 60px;
     padding: 25px 50px;
 
+    @media screen and (max-width: 39.9375em) { // small only
+        margin-bottom: 30px;
+    }
+
     &__title {
         font-size: 22px;
         font-weight: bold;
