@@ -43,17 +43,6 @@
         </div>
     </base-card>
 
-    <!-- <div class="grid-x grid-margin-x">
-        <base-card extraCss="cell medium-6">
-            <p>Implied Loan</p>
-            <p>{{ rawLoanAmount }} €</p>
-        </base-card>
-        <base-card extraCss="cell medium-6">
-            <p>Loan to value</p>
-            <p>{{ loanToValue }} %</p>
-        </base-card>
-    </div> -->
-
 </template>
 
 <script>
