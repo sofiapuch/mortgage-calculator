@@ -44,6 +44,8 @@
             <p>{{ loanToValue }} %</p>
         </div>
     </base-card>
+    
+    <RatesTable :tableData="tableData"/>
 
 </template>
 
@@ -53,6 +55,7 @@ const BROKER_TAX = 0.0714;
 const CITY_TAX = 0.06;
 
 import RealEstateToggle from './RealEstateToggle.vue';
+import RatesTable from './RatesTable.vue';
 
 const getNotaryCosts = (propertyPrice) => {
     // notaryCosts = (2144.0 + (0.013 * (property_price - 100000.0)))
@@ -75,7 +78,8 @@ const getTotalCosts = (notaryCosts, brokerCosts, stampDutyCosts) => {
 
 export default {
     components: {
-        RealEstateToggle
+        RealEstateToggle,
+        RatesTable
     },
     data() {
         return {
@@ -84,7 +88,8 @@ export default {
             cityTax: CITY_TAX,
             purchasePrice: 0,
             totalSavings: 0,
-            realEstateCommission: false
+            realEstateCommission: false,
+            tableData: {}
         }
     },
     computed: {
@@ -141,6 +146,12 @@ export default {
             })
             .then((response) => {
                 console.log("response: ", response);
+
+                const data = response.data;
+
+                if (data && data.root && data.root.ratesTable) {
+                    this.tableData = data.root.ratesTable;
+                }
             });
         }
     }
