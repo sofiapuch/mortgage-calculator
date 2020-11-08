@@ -10,10 +10,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(entry, index) in tableData" :key="index">
-                        <td>{{ entry.borrowingRate }}</td>
-                        <td>{{ entry.borrowingRate }}</td>
-                        <td>{{ entry.monthlyRate }}</td>
+                    <tr v-for="(entry, key) in tableData" :key="key">
+                        <td>{{ key }} Years</td>
+                        <td>{{ entry.monthlyRate.toFixed(0) }} €</td>
+                        <td>{{ entry.borrowingRate }} %</td>
                     </tr>
                 </tbody>
             </table>
