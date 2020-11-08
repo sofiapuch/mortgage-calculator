@@ -1,12 +1,15 @@
 <template>
-  <h1>Mortgage Calculator</h1>
+    <h1>Mortgage Calculator</h1>
+    <MortgageCalculator />
 </template>
 
 <script>
-
+import MortgageCalculator from "./components/MortgageCalculator.vue";
 
 export default {
-
+    components: {
+        MortgageCalculator
+    }
 }
 </script>
 
