@@ -1,0 +1,37 @@
+{
+    "meta": {
+        "serverTime": "2020-11-08T15:33:48+00:00",
+        "status": 0,
+        "key": "OK"
+    },
+    "data": {
+        "root": {
+            "ratesTable": {
+                "30": {
+                    "borrowingRate": 1.9,
+                    "monthlyRate": 1025.9
+                },
+                "25": {
+                    "borrowingRate": 1.85,
+                    "monthlyRate": 1012.75
+                },
+                "20": {
+                    "borrowingRate": 1.32,
+                    "monthlyRate": 873.33
+                },
+                "15": {
+                    "borrowingRate": 1.04,
+                    "monthlyRate": 799.68
+                },
+                "10": {
+                    "borrowingRate": 0.75,
+                    "monthlyRate": 723.39
+                },
+                "5": {
+                    "borrowingRate": 0.7,
+                    "monthlyRate": 710.24
+                }
+            }
+        }
+    }
+}
