@@ -21,6 +21,7 @@ export default {
 <style lang="scss">
 // global styles
 $body-font-color: #413d3e;
+$box-shadow-color: #acacac;
 
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;

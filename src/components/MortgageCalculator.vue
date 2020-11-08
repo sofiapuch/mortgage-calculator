@@ -1,49 +1,60 @@
 <template>
 
-    <base-card extraCss="grid-x">
-        <h3 class="cell">Mortgage Calculator</h3>
-        
-        <form class="cell" @submit.prevent="submitForm">
-            <div>
-                <label for="purchase-price">Property purchase price</label>
-                <input 
-                    id="purchase-price" 
-                    name="purchase-price" 
-                    type="number"
-                    v-model.number="purchasePrice" />
-            </div>
-            <div>
-                <RealEstateToggle v-model="realEstateCommission" />
-            </div>
-            <div>
-                <label for="total-savings">Total savings</label>
-                <input 
-                    id="total-savings" 
-                    name="total-savings" 
-                    type="number"
-                    v-model.number="totalSavings" />
-            </div>
-            <div>
-                <label for="">Annual repayment rate</label>
-                <input type="text" />
-            </div>
-            <div class="mortgage-calculator__button-wrapper">
-                <button class="mortgage-calculator__button">Calculate</button>
-            </div>
-        </form>
+    <div class="grid-x grid-margin-x">
 
-    </base-card>
+        <base-card extraCss="cell medium-8 large-10">
+            
+            <form class="mortgage-calculator cell" @submit.prevent="submitForm">
 
-    <base-card extraCss="grid-x">
-        <div class="cell medium-6">
-            <p>Implied Loan</p>
-            <p>{{ rawLoanAmount }} €</p>
+                <h3 class="mortgage-calculator__title cell">Mortgage Calculator</h3>
+
+                <div class="grid-x grid-margin-x">
+                    <div class="cell medium-6">
+                        <label for="purchase-price">Property purchase price</label>
+                        <input 
+                            id="purchase-price" 
+                            name="purchase-price" 
+                            type="number"
+                            v-model.number="purchasePrice" />
+                    </div>
+                    <div class="cell medium-6">
+                        <label for="total-savings">Total savings</label>
+                        <input 
+                            id="total-savings" 
+                            name="total-savings" 
+                            type="number"
+                            v-model.number="totalSavings" />
+                    </div>
+                    <div class="cell medium-6">
+                        <RealEstateToggle v-model="realEstateCommission" />
+                    </div>
+                    <div class="cell medium-6">
+                        <label for="">Annual repayment rate</label>
+                        <input type="text" />
+                    </div>
+                    <div class="mortgage-calculator__button-wrapper cell">
+                        <button class="mortgage-calculator__button">Calculate</button>
+                    </div>
+                </div>
+                
+            </form>
+
+        </base-card>
+
+        <div class="cell medium-4 large-2">
+            <MortgageOption
+                title="Implied Loan"
+                option-symbol="€"
+                :option-value="rawLoanAmount"
+            />
+            <MortgageOption
+                title="Loan to value"
+                option-symbol="%"
+                :option-value="loanToValue"
+            />
         </div>
-        <div class="cell medium-6">
-            <p>Loan to value</p>
-            <p>{{ loanToValue }} %</p>
-        </div>
-    </base-card>
+
+    </div>
     
     <RatesTable :tableData="tableData"/>
 
@@ -54,7 +65,8 @@
 const BROKER_TAX = 0.0714;
 const CITY_TAX = 0.06;
 
-import RealEstateToggle from './RealEstateToggle.vue';
+import RealEstateToggle from './customFormElements/RealEstateToggle.vue';
+import MortgageOption from './MortgageOption.vue';
 import RatesTable from './RatesTable.vue';
 
 const getNotaryCosts = (propertyPrice) => {
@@ -79,6 +91,7 @@ const getTotalCosts = (notaryCosts, brokerCosts, stampDutyCosts) => {
 export default {
     components: {
         RealEstateToggle,
+        MortgageOption,
         RatesTable
     },
     data() {
@@ -95,6 +108,11 @@ export default {
     computed: {
         rawLoanAmount() {
 
+            // return a 0 on page load
+            if (this.purchasePrice === 0 && this.totalSavings === 0) {
+                return 0;
+            }
+
             const notaryCosts = getNotaryCosts(this.purchasePrice);
 
             const brokerCosts = this.realEstateCommission ? getBrokerCosts(this.brokerTax, this.purchasePrice) : 0;
@@ -109,7 +127,7 @@ export default {
         loanToValue() {
             // loanToValue = rawLoanAmount / property_price
             const value = (this.rawLoanAmount / this.purchasePrice) * 100;
-            return value.toFixed(1);
+            return Number.isNaN(value) ? 0 : value;
         }
     },
     methods: {
@@ -164,8 +182,14 @@ $button-hover-color: #dba879;
 
 .mortgage-calculator {
 
+    &__title {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
     &__button-wrapper {
         text-align: center;
+        margin: 20px 0 0;
     }
 
     &__button {
