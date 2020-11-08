@@ -10,34 +10,38 @@
 
                 <div class="grid-x grid-margin-x">
                     <div class="mortgage-calculator__section cell medium-6">
-                        <label for="purchase-price">Property purchase price</label>
+                        <label for="purchase-price">Property purchase price (€)</label>
                         <input 
                             id="purchase-price" 
                             name="purchase-price"
                             type="number"
                             v-model.number="purchasePrice" 
                             @blur="validatePurchasePrice"/>
-                        <p class="error" v-if="purchasePriceValidity">Please enter a valid number</p>
+                        <p class="error" v-if="!purchasePriceValidity">Please enter a valid number</p>
                     </div>
                     <div class="mortgage-calculator__section cell medium-6">
-                        <label for="total-savings">Total savings</label>
+                        <label for="total-savings">Total savings (€)</label>
                         <input 
                             id="total-savings" 
                             name="total-savings" 
                             type="number"
                             v-model.number="totalSavings" 
                             @blur="validateTotalSavings"/>
-                        <p class="error" v-if="totalSavingsValidity">Please enter a valid number</p>
+                        <p class="error" v-if="!totalSavingsValidity">Please enter a valid number</p>
                     </div>
                     <div class="mortgage-calculator__section cell medium-6">
                         <RealEstateToggle v-model="realEstateCommission" />
                     </div>
                     <div class="mortgage-calculator__section cell medium-6">
                         <label for="">Annual repayment rate</label>
-                        <input type="text" value="2%" />
+                        <input type="text" value="2%" disabled/>
                     </div>
                     <div class="mortgage-calculator__button-wrapper cell">
-                        <button class="mortgage-calculator__button">Calculate</button>
+                        <button 
+                            class="mortgage-calculator__button"
+                            :disabled="submitIsDisabled">
+                            Calculate
+                        </button>
                     </div>
                 </div>
                 
@@ -104,17 +108,23 @@ export default {
             brokerTax: BROKER_TAX,
             cityTax: CITY_TAX,
             purchasePrice: 0,
-            purchasePriceValidity: null,
+            purchasePriceValidity: true,
             totalSavings: 0,
-            totalSavingsValidity: null,
+            totalSavingsValidity: true,
             realEstateCommission: false,
             tableData: {}
         }
     },
     computed: {
+        submitIsDisabled() {
+            if ( this.purchasePrice > 0 && this.totalSavings >= 0 ) {
+                return false;
+            }
+            return true;
+        },
         rawLoanAmount() {
-            // return a 0 on page load
-            if (this.purchasePrice === 0 && this.totalSavings === 0) {
+            // return a 0 if no purchase price or total savings or they're equal to zero
+            if (this.purchasePrice === 0 || this.totalSavings === 0 || this.purchasePrice === '' || this.totalSavings === '' ) {
                 return 0;
             }
 
@@ -137,10 +147,10 @@ export default {
     },
     methods: {
         validatePurchasePrice() {
-            this.purchasePriceValidity = this.purchasePrice <= 0;
+            this.purchasePriceValidity = this.purchasePrice >= 0;
         },
         validateTotalSavings() {
-            this.totalSavingsValidity = this.totalSavings <= 0;
+            this.totalSavingsValidity = this.totalSavings >= 0;
         },
         submitForm() {
  
@@ -239,6 +249,13 @@ $error-color: #c41c1c;
             background: $button-hover-color;
             color: #413d3e;
         }
+
+        &:disabled,
+        &[disabled] {
+            background: #acacac;
+            color: #3a3939;
+            pointer-events: none;
+        } 
 
         @media screen and (max-width: 39.9375em) { // small only
             width: 100%;

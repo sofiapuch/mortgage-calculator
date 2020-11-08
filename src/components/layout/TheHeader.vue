@@ -9,10 +9,10 @@ export default {}
 </script>
 
 <style lang="scss" scoped>
-$teal: #2c7083;
+$header-border: #dba879;
 
 .the-header {
-    border-bottom: 2px solid $teal;
+    border-bottom: 2px solid $header-border;
     margin-bottom: 60px;
     padding: 25px 50px;
 
