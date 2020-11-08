@@ -13,6 +13,7 @@ $teal: #2c7083;
 
 .the-header {
     border-bottom: 2px solid $teal;
+    margin-bottom: 60px;
     padding: 25px 50px;
 
     &__title {

@@ -1,42 +1,58 @@
 <template>
-    <h2>Mortgage Calculator</h2>
-    
-    <form @submit.prevent="submitForm">
-        <div>
-            <label for="purchase-price">Property purchase price</label>
-            <input 
-                id="purchase-price" 
-                name="purchase-price" 
-                type="number"
-                v-model.number="purchasePrice" />
-        </div>
-        <div>
-            <RealEstateToggle v-model="realEstateCommission" />
-        </div>
-        <div>
-            <label for="total-savings">Total savings</label>
-            <input 
-                id="total-savings" 
-                name="total-savings" 
-                type="number"
-                v-model.number="totalSavings" />
-        </div>
-        <div>
-            <label for="">Annual repayment rate</label>
-            <input type="text" />
-        </div>
-        <button>Calculate</button>
-    </form>
 
-    <div>
-        <p>Implied Loan</p>
-        <p>{{ rawLoanAmount }} €</p>
-    </div>
+    <base-card extraCss="grid-x">
+        <h3 class="cell">Mortgage Calculator</h3>
+        
+        <form class="cell" @submit.prevent="submitForm">
+            <div>
+                <label for="purchase-price">Property purchase price</label>
+                <input 
+                    id="purchase-price" 
+                    name="purchase-price" 
+                    type="number"
+                    v-model.number="purchasePrice" />
+            </div>
+            <div>
+                <RealEstateToggle v-model="realEstateCommission" />
+            </div>
+            <div>
+                <label for="total-savings">Total savings</label>
+                <input 
+                    id="total-savings" 
+                    name="total-savings" 
+                    type="number"
+                    v-model.number="totalSavings" />
+            </div>
+            <div>
+                <label for="">Annual repayment rate</label>
+                <input type="text" />
+            </div>
+            <button>Calculate</button>
+        </form>
 
-    <div>
-        <p>Loan to value</p>
-        <p>{{ loanToValue }} %</p>
-    </div>
+    </base-card>
+
+    <base-card extraCss="grid-x">
+        <div class="cell medium-6">
+            <p>Implied Loan</p>
+            <p>{{ rawLoanAmount }} €</p>
+        </div>
+        <div class="cell medium-6">
+            <p>Loan to value</p>
+            <p>{{ loanToValue }} %</p>
+        </div>
+    </base-card>
+
+    <!-- <div class="grid-x grid-margin-x">
+        <base-card extraCss="cell medium-6">
+            <p>Implied Loan</p>
+            <p>{{ rawLoanAmount }} €</p>
+        </base-card>
+        <base-card extraCss="cell medium-6">
+            <p>Loan to value</p>
+            <p>{{ loanToValue }} %</p>
+        </base-card>
+    </div> -->
 
 </template>
 

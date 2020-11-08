@@ -1,6 +1,8 @@
 <template>
     <TheHeader />
-    <MortgageCalculator />
+    <div class="grid-container">
+        <MortgageCalculator />
+    </div>
 </template>
 
 <script>
