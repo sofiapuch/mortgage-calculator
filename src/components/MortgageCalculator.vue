@@ -11,8 +11,7 @@
                 v-model.number="purchasePrice" />
         </div>
         <div>
-            <label for="">Real estate comission</label>
-            <input type="text" />
+            <RealEstateToggle v-model="realEstateCommission" />
         </div>
         <div>
             <label for="">Total savings</label>
@@ -32,12 +31,14 @@
 
     <div>
         <p>Loan to value</p>
-        <p>{{ loanToValue }} %</p>
+        <!-- <p>{{ loanToValue }} %</p> -->
     </div>
 
 </template>
 
 <script>
+
+import RealEstateToggle from './RealEstateToggle.vue';
 
 const getNotaryCosts = (propertyPrice) => {
     // notaryCosts = (2144.0 + (0.013 * (property_price - 100000.0)))
@@ -54,30 +55,35 @@ const getStampDutyCosts = (cityTax, propertyPrice) => {
     return cityTax * propertyPrice;
 }
 
+const getTotalCosts = (notaryCosts, brokerCosts, stampDutyCosts) => {
+    return notaryCosts + brokerCosts + stampDutyCosts;
+}
+
 export default {
+    components: {
+        RealEstateToggle
+    },
     data() {
         return {
             brokerTax: 0.0714, // TODO: move to global
             cityTax: 0.06, // TODO: move to global
             purchasePrice: 0,
             totalSavings: 0,
+            realEstateCommission: false,
             // impliedLoan: 0,
-            loanToValue: 0
+            //loanToValue: 0
         }
     },
     computed: {
         rawLoanAmount() {
 
-            console.log(this.purchasePrice);
             const notaryCosts = getNotaryCosts(this.purchasePrice);
 
-            // TODO: only if real estate commission 
-            const brokerCosts = getBrokerCosts(this.brokerTax, this.purchasePrice);
+            const brokerCosts = this.realEstateCommission ? getBrokerCosts(this.brokerTax, this.purchasePrice) : 0;
 
             const stampDutyCosts = getStampDutyCosts(this.cityTax, this.purchasePrice);
 
-            // TODO: extract
-            const totalCosts = notaryCosts + brokerCosts + stampDutyCosts; 
+            const totalCosts = getTotalCosts(notaryCosts, brokerCosts, stampDutyCosts); 
 
             //rawLoanAmount = totalCosts - total_savings + property_price
             return totalCosts - this.totalSavings + this.purchasePrice;
