@@ -19,7 +19,7 @@ export default {
 </script>
 
 <style lang="scss">
-
+// global styles
 $body-font-color: #413d3e;
 
 #app {
@@ -27,5 +27,9 @@ $body-font-color: #413d3e;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     color: $body-font-color;
+}
+
+p {
+    margin: 0;
 }
 </style>

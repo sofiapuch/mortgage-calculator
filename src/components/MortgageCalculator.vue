@@ -27,7 +27,9 @@
                 <label for="">Annual repayment rate</label>
                 <input type="text" />
             </div>
-            <button>Calculate</button>
+            <div class="mortgage-calculator__button-wrapper">
+                <button class="mortgage-calculator__button">Calculate</button>
+            </div>
         </form>
 
     </base-card>
@@ -42,12 +44,18 @@
             <p>{{ loanToValue }} %</p>
         </div>
     </base-card>
+    
+    <RatesTable :tableData="tableData"/>
 
 </template>
 
 <script>
 
+const BROKER_TAX = 0.0714;
+const CITY_TAX = 0.06;
+
 import RealEstateToggle from './RealEstateToggle.vue';
+import RatesTable from './RatesTable.vue';
 
 const getNotaryCosts = (propertyPrice) => {
     // notaryCosts = (2144.0 + (0.013 * (property_price - 100000.0)))
@@ -70,15 +78,18 @@ const getTotalCosts = (notaryCosts, brokerCosts, stampDutyCosts) => {
 
 export default {
     components: {
-        RealEstateToggle
+        RealEstateToggle,
+        RatesTable
     },
     data() {
         return {
-            brokerTax: 0.0714, // TODO: move to global
-            cityTax: 0.06, // TODO: move to global
+            baseUrl: process.env.VUE_APP_BASE_URL,
+            brokerTax: BROKER_TAX,
+            cityTax: CITY_TAX,
             purchasePrice: 0,
             totalSavings: 0,
-            realEstateCommission: false
+            realEstateCommission: false,
+            tableData: {}
         }
     },
     computed: {
@@ -103,8 +114,76 @@ export default {
     },
     methods: {
         submitForm() {
-            console.log('Form submitted');
+ 
+            // IMPORTANT: Server CORS issue - Data saved from request
+            // via Postman
+
+            // fetch("https://hypofriend.de/q", { 
+            //     "headers": {
+            //         "accept": "*/*",
+            //         "accept-language": "en,de;q=0.9,cs;q=0.8", 
+            //         "cache-control": "no-cache", 
+            //         "content-type": "application/json", 
+            //         "pragma": "no-cache",
+            //         "sec-fetch-dest": "empty", 
+            //         "sec-fetch-mode": "cors", 
+            //         "sec-fetch-site": "same-origin",
+            //     },
+            //     "referrer": "https://hypofriend.de", 
+            //     "referrerPolicy": "same-origin",
+            //     "body": "{\"query\":\"query {root {rates_table(property_price: 340000, repayment: 2, loan_amount: 315664, years_fixed: [5,10,15,20,25,30])} }\"}",
+            //     "method": "POST",
+            //     "mode": "cors",
+            //     "credentials": "include"
+            // }).then(response => response.json()).then(data => console.log(data));
+
+            // Fetch the data from a mockData file saved on the public folder
+            fetch(this.baseUrl + 'mockData.json').then( (resolve) => {
+                if (resolve.ok) {
+                    return resolve.json();
+                }
+                throw new Error(resolve.status);
+            })
+            .then((response) => {
+                console.log("response: ", response);
+
+                const data = response.data;
+
+                if (data && data.root && data.root.ratesTable) {
+                    this.tableData = data.root.ratesTable;
+                }
+            });
         }
     }
 }
 </script>
+
+<style lang="scss" scoped>
+$button-primary-color: #2c7083;
+$button-hover-color: #dba879;
+
+.mortgage-calculator {
+
+    &__button-wrapper {
+        text-align: center;
+    }
+
+    &__button {
+        background: $button-primary-color;
+        border-radius: 3px;
+        color: #fff;
+        cursor: pointer;
+        min-width: 160px;
+        padding: 10px 20px;
+
+        &:hover {
+            background: $button-hover-color;
+            color: #413d3e;
+        }
+
+        @media screen and (max-width: 39.9375em) { // small only
+            width: 100%;
+        }
+    }
+}
+</style>
