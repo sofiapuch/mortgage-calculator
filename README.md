@@ -12,7 +12,7 @@ By Sofia Puch (sofiapuch.frontend@gmail.com)
 1. Clone repository
 2. Run `npm install` to download all the dependencies needed
 3. 
-    Run `npm run serve` to start the server
+    Run `npm run server` to start the server
     or
     Run `npm run test:unit` to run the unit tests
 
