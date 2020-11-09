@@ -9,7 +9,7 @@ export default {}
 </script>
 
 <style lang="scss" scoped>
-$header-border: #dba879;
+$header-border: #2c7083;
 
 .the-header {
     border-bottom: 2px solid $header-border;

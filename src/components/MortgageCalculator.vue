@@ -9,32 +9,46 @@
                 <h3 class="mortgage-calculator__title cell">Mortgage Calculator</h3>
 
                 <div class="grid-x grid-margin-x">
-                    <div class="mortgage-calculator__section cell medium-6">
-                        <label for="purchase-price">Property purchase price (€)</label>
+                    <div 
+                        class="mortgage-calculator__section mortgage-calculator__section--euros cell medium-6"
+                        :class="{error: purchasePriceValidity === false}"
+                    >
+                        <label for="purchase-price">Property purchase price</label>
                         <input 
                             id="purchase-price" 
                             name="purchase-price"
                             type="number"
+                            class="mortgage-calculator__input"
                             v-model.number="purchasePrice" 
                             @blur="validatePurchasePrice"/>
-                        <p class="error" v-if="!purchasePriceValidity">Please enter a valid number</p>
+                        <p 
+                            class="mortgage-calculator__error-message" 
+                            v-if="!purchasePriceValidity">
+                            Please enter a valid number
+                        </p>
                     </div>
-                    <div class="mortgage-calculator__section cell medium-6">
-                        <label for="total-savings">Total savings (€)</label>
+                    <div 
+                        class="mortgage-calculator__section mortgage-calculator__section--euros cell medium-6"
+                        :class="{error: totalSavingsValidity === false}"
+                    >
+                        <label for="total-savings">Total savings</label>
                         <input 
                             id="total-savings" 
                             name="total-savings" 
                             type="number"
+                            class="mortgage-calculator__input"
                             v-model.number="totalSavings" 
                             @blur="validateTotalSavings"/>
-                        <p class="error" v-if="!totalSavingsValidity">Please enter a valid number</p>
+                        <p 
+                            class="mortgage-calculator__error-message" 
+                            v-if="!totalSavingsValidity">Please enter a valid number
+                        </p>
                     </div>
                     <div class="mortgage-calculator__section cell medium-6">
                         <RealEstateToggle v-model="realEstateCommission" />
                     </div>
                     <div class="mortgage-calculator__section cell medium-6">
-                        <label for="">Annual repayment rate</label>
-                        <input type="text" value="2%" disabled/>
+                        <RepaymentRateIncremental />
                     </div>
                     <div class="mortgage-calculator__button-wrapper cell">
                         <button 
@@ -74,6 +88,7 @@ const BROKER_TAX = 0.0714;
 const CITY_TAX = 0.06;
 
 import RealEstateToggle from './customFormElements/RealEstateToggle.vue';
+import RepaymentRateIncremental from './customFormElements/RepaymentRateIncremental.vue';
 import MortgageOption from './MortgageOption.vue';
 import RatesTable from './RatesTable.vue';
 
@@ -83,6 +98,7 @@ import calculateTotalCosts from '../utils/mortgage-utils';
 export default {
     components: {
         RealEstateToggle,
+        RepaymentRateIncremental,
         MortgageOption,
         RatesTable
     },
@@ -183,6 +199,7 @@ $button-hover-color: #dba879;
 $error-color: #c41c1c;
 
 .mortgage-calculator {
+    $this: &;
 
     &__title {
         font-size: 20px;
@@ -194,23 +211,50 @@ $error-color: #c41c1c;
         margin-bottom: 30px;
         position: relative;
 
-        .error {
-            bottom: -20px;
-            color: $error-color;
-            font-size: 12px;
-            font-weight: 700;
-            position: absolute;
+        &--euros {
+            &:after {
+                color: $input-value-color;
+                content: '€';
+                font-weight: 700;
+                position: absolute;
+                right: 20px;
+                top: 54%;
+            }
         }
 
-        input {
-            color: $input-value-color;
-            border-color: $input-border-color;
-            border-radius: 3px;
-            font-size: 20px;
-            font-weight: 700;
-            padding: 20px 20px;
-            text-align: center;
+        &.error {
+            #{$this}__input {
+                background-color: rgba( $error-color, .1);
+                border-color: $error-color;
+                color: $error-color;
+            }
+
+            &:after {
+                color: $error-color;
+            }
         }
+
+        label {
+            font-size: 16px;
+        }
+    }
+
+    &__input {
+        color: $input-value-color;
+        border-color: $input-border-color;
+        border-radius: 3px;
+        font-size: 20px;
+        font-weight: 700;
+        padding: 20px 35px;
+        text-align: right;
+    }
+
+    &__error-message {
+        bottom: -20px;
+        color: $error-color;
+        font-size: 12px;
+        font-weight: 700;
+        position: absolute;
     }
 
     &__button-wrapper {
@@ -222,11 +266,13 @@ $error-color: #c41c1c;
         border-radius: 3px;
         color: #fff;
         cursor: pointer;
+        font-weight: 700;
         min-width: 160px;
         padding: 10px 20px;
 
         &:hover {
             background: $button-hover-color;
+            box-shadow: 1px 1px 3px #acacac;
             color: #413d3e;
         }
 
