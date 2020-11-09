@@ -173,7 +173,7 @@ export default {
             // }).then(response => response.json()).then(data => console.log(data));
 
             // Fetch the data from a mockData file saved on the public folder
-            fetch(this.baseUrl + 'mockData.json').then( (resolve) => {
+            fetch(window.location.href + 'mockData.json').then( (resolve) => {
                 if (resolve.ok) {
                     return resolve.json();
                 }
@@ -267,8 +267,9 @@ $error-color: #c41c1c;
         color: #fff;
         cursor: pointer;
         font-weight: 700;
+        height: 40px;
         min-width: 160px;
-        padding: 10px 20px;
+        padding: 0 20px;
 
         &:hover {
             background: $button-hover-color;
