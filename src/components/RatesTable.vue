@@ -37,6 +37,14 @@ export default {
 
 <style lang="scss" scoped>
 .rates-table {
+
+    &__table {
+        thead th,
+        tbody td {
+            text-align: center;
+        }
+    }
+
     &__info {
         font-size: 14px;
     }

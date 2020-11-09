@@ -9,12 +9,16 @@ export default {}
 </script>
 
 <style lang="scss" scoped>
-$teal: #2c7083;
+$header-border: #2c7083;
 
 .the-header {
-    border-bottom: 2px solid $teal;
+    border-bottom: 2px solid $header-border;
     margin-bottom: 60px;
     padding: 25px 50px;
+
+    @media screen and (max-width: 39.9375em) { // small only
+        margin-bottom: 30px;
+    }
 
     &__title {
         font-size: 22px;

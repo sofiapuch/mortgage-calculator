@@ -21,6 +21,7 @@ export default {
 <style lang="scss">
 // global styles
 $body-font-color: #413d3e;
+$box-shadow-color: #acacac;
 
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -31,5 +32,28 @@ $body-font-color: #413d3e;
 
 p {
     margin: 0;
+}
+
+table th,
+table td {
+    color: $body-font-color;
+}
+
+input {
+    margin: 0 !important;
+}
+
+// Remove Arrows from inputs
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 </style>
