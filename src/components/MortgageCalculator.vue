@@ -77,24 +77,8 @@ import RealEstateToggle from './customFormElements/RealEstateToggle.vue';
 import MortgageOption from './MortgageOption.vue';
 import RatesTable from './RatesTable.vue';
 
-const getNotaryCosts = (propertyPrice) => {
-    // notaryCosts = (2144.0 + (0.013 * (property_price - 100000.0)))
-    return (2144.0 + (0.013 * (propertyPrice - 100000.0)));
-}
-
-const getBrokerCosts = (brokerTax, propertyPrice) => {
-    // brokerCosts = brokerTax * property_price
-    return brokerTax * propertyPrice;
-}
-
-const getStampDutyCosts = (cityTax, propertyPrice) => {
-    // stampDutyCosts = cityTax * property_price
-    return cityTax * propertyPrice;
-}
-
-const getTotalCosts = (notaryCosts, brokerCosts, stampDutyCosts) => {
-    return notaryCosts + brokerCosts + stampDutyCosts;
-}
+// import util functions that will be needed later
+import calculateTotalCosts from '../utils/mortgage-utils';
 
 export default {
     components: {
@@ -105,8 +89,6 @@ export default {
     data() {
         return {
             baseUrl: process.env.VUE_APP_BASE_URL,
-            brokerTax: BROKER_TAX,
-            cityTax: CITY_TAX,
             purchasePrice: 0,
             purchasePriceValidity: true,
             totalSavings: 0,
@@ -124,17 +106,15 @@ export default {
         },
         rawLoanAmount() {
             // return a 0 if no purchase price or total savings or they're equal to zero
-            if (this.purchasePrice === 0 || this.totalSavings === 0 || this.purchasePrice === '' || this.totalSavings === '' ) {
+            if (this.purchasePrice === 0 || this.purchasePrice === '' || this.totalSavings === '' ) {
                 return 0;
             }
 
-            const notaryCosts = getNotaryCosts(this.purchasePrice);
-
-            const brokerCosts = this.realEstateCommission ? getBrokerCosts(this.brokerTax, this.purchasePrice) : 0;
-
-            const stampDutyCosts = getStampDutyCosts(this.cityTax, this.purchasePrice);
-
-            const totalCosts = getTotalCosts(notaryCosts, brokerCosts, stampDutyCosts); 
+            const totalCosts = calculateTotalCosts(
+                this.purchasePrice, 
+                CITY_TAX,
+                this.realEstateCommission ? BROKER_TAX : null
+            ); 
 
             // rawLoanAmount = totalCosts - total_savings + property_price
             return totalCosts - this.totalSavings + this.purchasePrice;
