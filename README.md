@@ -1,4 +1,4 @@
-# Morgage Calculator
+# Mortgage Calculator
 By Sofia Puch (sofiapuch.frontend@gmail.com)
 
 - The repository was created using [Vue-CLI](https://cli.vuejs.org/)
@@ -30,6 +30,8 @@ By Sofia Puch (sofiapuch.frontend@gmail.com)
 
 ### UI Responsiveness
 
+`** Might not work on legacy browsers or old versions of IOS in which case a polyfill would be needed`
+
 Tested on Chrome:
 - Imac
 - Ipad (5th generation) 13.5.1
@@ -37,5 +39,3 @@ Tested on Chrome:
 
 Tested on Safari:
 - Imac
-
-** Might not work on legacy browsers or old versions of IOS in which case a polyfill would be needed
